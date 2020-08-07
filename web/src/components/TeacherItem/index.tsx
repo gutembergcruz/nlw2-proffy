@@ -1,40 +1,56 @@
-import React from "react";
+import React from 'react';
 
-import "./styles.css";
+import whatsappIcon from '../../assets/images/icons/whatsapp.svg';
 
-import whastappIcon from "../../assets/images/icons/whatsapp.svg";
+import api from '../../services/api';
 
-function TeacherItem() {
+import './styles.css';
+
+export interface Teacher {
+  id: number;
+  avatar: string;
+  bio: string;
+  cost: number;
+  name: string;
+  subject: string;
+  whatsapp: string;
+}
+
+export interface TeacherItemProps {
+  teacher: Teacher;
+}
+
+const TeacherItem: React.FC<TeacherItemProps> = ({ teacher }) => {
+  function createNewConnection() {
+    api.post('connections', {
+      user_id: teacher.id,
+    });
+  }
+
   return (
     <article className="teacher-item">
       <header>
-        <img
-          src="https://avatars0.githubusercontent.com/u/31583703?s=460&u=39fcc83732de56a95e5a198c1beed327be4bf427&v=4"
-          alt="Gutemberg Cruz"
-        />
-
+        <img src={teacher.avatar} alt={teacher.name} />
         <div>
-          <strong>Gutemberg Cruz</strong>
-          <span>Física Quântica</span>
+          <strong>{teacher.name}</strong>
+          <span>{teacher.subject}</span>
         </div>
       </header>
-      <p>
-        Autodidata Esforçado pra garai
-        <br /> <br />
-        Dev Fron-End e UI Designer
-        <br /> <br />
-        Apaixonado por Meu filho
-      </p>
+      <p>{teacher.bio}</p>
 
       <footer>
         <p>
           Preço/hora
-          <strong>R$ 75,00</strong>
+          <strong>R$ {teacher.cost}</strong>
         </p>
-        <button type="button">
-          <img src={whastappIcon} alt="whatsapp" />
+        <a
+          onClick={createNewConnection}
+          target="_blank"
+          href={`https://wa.me/${teacher.whatsapp}`}
+        >
+          <img src={whatsappIcon} alt="Whatsapp"/>
           Entrar em contato
-        </button>
+        </a>
       </footer>
     </article>
   );
